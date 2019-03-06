@@ -1,0 +1,89 @@
+version '0.0.1'
+group 'com.susu'
+
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+repositories {
+	// 本地仓库
+	mavenLocal()
+	// 阿里云仓库
+	maven { 
+		url "http://maven.aliyun.com/nexus/content/groups/public/"
+	}
+	// maven中心仓库
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "$springBootVersion"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: "$springBootVersion"
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
+
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
+
+ext {
+    if (project.hasProperty('profile')) {
+        profile = project['profile']
+    } else {
+        profile = 'dev'
+    }
+
+    println("profile: " + profile)
+}
+
+// 配置源代码目录结构，此处配置的跟默认的结构是一样的
+sourceSets {
+    main {
+        java {
+            srcDirs('src/main/java')
+//          不想包含文件的路径
+//          exclude '/com.xiaozhu.xzdz.debug/'
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+            srcDirs "src/main/profiles/${profile}"
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+
+    println("resources: " + resources)
+}
+
+jar {
+    baseName = 'gSpring'
+    version = "$version"
+    manifest {
+        attributes "Manifest-Version": 1.0,
+                   'Main-Class': 'com.susu.Application'
+    }
+}
+
+bootJar {
+    baseName = 'gSpring'
+    version = '0.0.2'
+}
+
+println(project.getProjectDir())

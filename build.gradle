@@ -90,3 +90,6 @@ bootJar {
 }
 
 println(project.getProjectDir())
+
+sourceCompatibility = 1.8
+buildDir = 'build'

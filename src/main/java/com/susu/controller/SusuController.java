@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-public class SusuControlelr {
+public class SusuController {
 
     @RequestMapping("/hey")
     public String hey() {
